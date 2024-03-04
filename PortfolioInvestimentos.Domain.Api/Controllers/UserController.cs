@@ -32,8 +32,7 @@ namespace PortfolioInvestimentos.Domain.Api.Controllers
         }
 
         [HttpGet]
-        //[Authorize(Roles = "1")]
-        //Manager
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> GetAllAsync()
         {
             var users = await _userRepository.GetAllAsync();
@@ -42,7 +41,7 @@ namespace PortfolioInvestimentos.Domain.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "1")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             var user = await _userRepository
@@ -51,24 +50,25 @@ namespace PortfolioInvestimentos.Domain.Api.Controllers
             return new CustomActionResult(HttpStatusCode.OK, user);
         }
 
-        [HttpPost]
-        [AllowAnonymous]
-        public async Task<IActionResult> PostAsync([FromServices] UserHandler handler, [FromBody] CreateUserCommand command)
-        {
-            CommandResult commandResult = (CommandResult)await handler.Handle(command);
-
-            return new CustomActionResult(HttpStatusCode.Created, commandResult.Data, commandResult.Errors);
-        }
-
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
 
             var user = await _userRepository.GetWithParamsAsync(x => x.Id == id);
             _userRepository.Delete(user);
             await _userRepository.SaveAsync();
-
+            
             return new CustomActionResult(HttpStatusCode.OK);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> PostAsync([FromServices] UserHandler handler, [FromBody] CreateUserCommand command)
+        {
+            CommandResult commandResult = (CommandResult)await handler.Handle(command);
+
+            return new CustomActionResult(commandResult.StatusCode, commandResult.Data, commandResult.Errors);
         }
 
         [HttpPost]

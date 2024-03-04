@@ -8,10 +8,16 @@ namespace PortfolioInvestimentos.Domain.Entities
 {
     public class Account : BaseEntity
     {
-        public int Id { get; set; }
-        public int UserId { get; set; }
-        public User User { get; set; }
-        public decimal Value { get; set; }
-        public IEnumerable<Transaction> Transactions { get; set; }
+        public Account(int userId, decimal value)
+        {
+            UserId = userId;
+            Value = value;
+        }
+
+        protected Account() { }
+        public int UserId { get; private set; }
+        public User User { get; private set; }
+        public decimal Value { get; private set; }
+        public IEnumerable<Transaction> Transactions { get; private set; } = new List<Transaction>();
     }
 }

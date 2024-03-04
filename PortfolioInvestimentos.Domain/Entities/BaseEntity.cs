@@ -8,6 +8,7 @@ namespace PortfolioInvestimentos.Domain.Entities
 {
     public abstract class BaseEntity
     {
-        public DateTime CreatedAt { get; set; }
+        public int Id { get; protected set; }
+        public DateTime CreatedAt { get; protected set; }
     }
 }

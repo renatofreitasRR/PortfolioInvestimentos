@@ -21,7 +21,7 @@ namespace PortfolioInvestimentos.Domain.Api.Controllers
         }
 
         [HttpGet]
-        //Manager
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> GetAllAsync()
         {
             var users = await _transactionRepository.GetAllAsync();
@@ -39,7 +39,7 @@ namespace PortfolioInvestimentos.Domain.Api.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "2")]
+        [Authorize(Roles = "Client, Manager")]
         public async Task<IActionResult> PostAsync([FromServices] ProductHandler handler, [FromBody] CreateProductCommand command)
         {
             CommandResult commandResult = (CommandResult)await handler.Handle(command);
@@ -48,7 +48,7 @@ namespace PortfolioInvestimentos.Domain.Api.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "2")]
+        [Authorize(Roles = "Client, Manager")]
         public async Task<IActionResult> PutAsync([FromServices] ProductHandler handler, [FromBody] UpdateProductCommand command)
         {
             CommandResult commandResult = (CommandResult)await handler.Handle(command);

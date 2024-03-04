@@ -7,6 +7,8 @@ namespace PortfolioInvestimentos.Domain.IoC
     {
         public static IServiceCollection AddHandlersCollection(this IServiceCollection services)
         {
+            services.AddTransient<AccountHandler>();
+            services.AddTransient<TransactionHandler>();
             services.AddTransient<UserHandler>();
             services.AddTransient<ProductHandler>();
             

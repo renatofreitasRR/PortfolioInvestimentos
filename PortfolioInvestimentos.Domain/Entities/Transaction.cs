@@ -11,7 +11,6 @@ namespace PortfolioInvestimentos.Domain.Entities
     {
         protected Transaction() { }
 
-        public int Id { get; private set; }
         public int AccountId { get; private set; }
         public Account Account { get; private set; }
         public int ProductId { get; private set; }

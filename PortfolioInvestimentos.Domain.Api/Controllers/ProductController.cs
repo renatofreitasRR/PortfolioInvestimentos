@@ -22,7 +22,6 @@ namespace PortfolioInvestimentos.Domain.Api.Controllers
         }
 
         [HttpGet]
-        //Manager
         public async Task<IActionResult> GetAllAsync()
         {
             var users = await _productRepository.GetAllAsync();
@@ -40,21 +39,21 @@ namespace PortfolioInvestimentos.Domain.Api.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "1")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> PostAsync([FromServices] ProductHandler handler, [FromBody] CreateProductCommand command)
         {
             CommandResult commandResult = (CommandResult)await handler.Handle(command);
 
-            return new CustomActionResult(HttpStatusCode.Created, commandResult.Data, commandResult.Errors);
+            return new CustomActionResult(commandResult.StatusCode, commandResult.Data, commandResult.Errors);
         }
 
         [HttpPost]
-        [Authorize(Roles = "1")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> PutAsync([FromServices] ProductHandler handler, [FromBody] UpdateProductCommand command)
         {
             CommandResult commandResult = (CommandResult)await handler.Handle(command);
 
-            return new CustomActionResult(HttpStatusCode.Created, commandResult.Data, commandResult.Errors);
+            return new CustomActionResult(commandResult.StatusCode, commandResult.Data, commandResult.Errors);
         }
     }
 }

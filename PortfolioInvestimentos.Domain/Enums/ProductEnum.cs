@@ -8,7 +8,7 @@ namespace PortfolioInvestimentos.Domain.Enums
 {
     public enum ProductType
     {
-        Stocks = 1,                 // Ações
+        Stocks = 1,             // Ações
         FixedIncomeSecurities,  // Títulos de Renda Fixa
         GovernmentBonds,        // Títulos Públicos
         InvestmentFunds,        // Fundos de Investimento

@@ -7,6 +7,7 @@ using PortfolioInvestimentos.Domain.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,9 +28,9 @@ namespace PortfolioInvestimentos.Domain.Handlers
                 .ExistsAsync(x => x.Name == command.Name);
 
             if (productExists)
-                return new CommandResult(null, $"O Produto com nome {command.Name} já existe!");
+                return new CommandResult(HttpStatusCode.Conflict, null, $"O Produto com nome {command.Name} já existe!");
 
-            var product = new Product(command.Name, command.Type, command.Value, command.DueDate);
+            var product = new Product(command.Name, command.Type, command.Value, command.QuantityAvailable, command.DueDate);
 
             await _productRepository.CreateAsync(product);
             await _productRepository.SaveAsync();
@@ -39,13 +40,18 @@ namespace PortfolioInvestimentos.Domain.Handlers
 
         public async Task<ICommandResult> Handle(UpdateProductCommand command)
         {
-            var productExists = await _productRepository
-                .ExistsAsync(x => x.Id == command.Id);
-
-            if (productExists is false)
-                return new CommandResult(null, $"Produto não encontrado!");
-
             var product = await _productRepository.GetWithParamsAsync(x => x.Id == command.Id);
+
+            if (product is null)
+                return new CommandResult(HttpStatusCode.NotFound, $"Produto não encontrado!");
+
+            var existsWithSameName = await _productRepository
+                .ExistsAsync(x => x.Name.ToUpper() == command.Name.ToUpper() && x.Id != command.Id);
+
+            if (existsWithSameName)
+                return new CommandResult(HttpStatusCode.Conflict, null, $"O Produto {command.Name} já existe!");
+
+            product.Update(command.Name, command.Type, command.Value, command.QuantityAvailable, command.DueDate, command.IsActive);
 
             _productRepository.Update(product);
             await _productRepository.SaveAsync();

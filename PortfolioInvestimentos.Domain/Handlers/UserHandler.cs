@@ -5,6 +5,7 @@ using PortfolioInvestimentos.Domain.Entities;
 using PortfolioInvestimentos.Domain.Handlers.Contracts;
 using PortfolioInvestimentos.Domain.Services;
 using PortfolioInvestimentos.Domain.Repositories;
+using System.Net;
 
 namespace PortfolioInvestimentos.Domain.Handlers
 {
@@ -25,7 +26,7 @@ namespace PortfolioInvestimentos.Domain.Handlers
                 .ExistsAsync(x => x.Email.ToUpper() == command.Email.ToUpper());
 
             if (userExists)
-                return new CommandResult(null, $"O usuário com email {command.Email} já existe!");
+                return new CommandResult(HttpStatusCode.Conflict, null, $"O usuário com email {command.Email} já existe!");
 
             var user = new User(command.Name, command.Profile, command.Email, command.Role);
 

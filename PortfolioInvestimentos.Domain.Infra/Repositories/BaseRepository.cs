@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PortfolioInvestimentos.Domain.Entities;
 using PortfolioInvestimentos.Domain.Infra.Context;
 using PortfolioInvestimentos.Domain.Repositories;
 using System.Linq.Expressions;
 
 namespace PortfolioInvestimentos.Domain.Infra.Repositories
 {
-    public class BaseRepository<T> : IDisposable, IBaseRepository<T> where T : class
+    public class BaseRepository<T> : IDisposable, IBaseRepository<T> where T : BaseEntity
     {
         protected readonly ApplicationDbContext _context;
 
@@ -17,8 +18,8 @@ namespace PortfolioInvestimentos.Domain.Infra.Repositories
         public async Task CreateAsync(T entity)
         {
             await _context
-                .Set<T>()
-                .AddAsync(entity);
+               .Set<T>()
+               .AddAsync(entity);
         }
 
         public void Update(T entity)

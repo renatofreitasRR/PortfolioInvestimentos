@@ -24,8 +24,7 @@ namespace PortfolioInvestimentos.Application.Validators.Products
 
             RuleFor(x => x.Value)
            .NotNull()
-           .GreaterThan(0)
-           .WithMessage("O campo Valor deve ter um valor válido e ser maior do que 0");
+           .WithMessage("O campo Valor deve ter um valor válido");
 
             RuleFor(x => x.DueDate)
            .NotNull()

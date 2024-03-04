@@ -25,7 +25,6 @@ namespace PortfolioInvestimentos.Domain.Entities
             Role = role;
         }
 
-        public int Id { get; private set; }
         public string Name { get; private set; }
         public UserInvestorProfile? Profile { get; private set; }
         public UserRole Role { get; private set; }
