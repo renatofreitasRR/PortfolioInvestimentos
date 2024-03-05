@@ -15,20 +15,23 @@ namespace PortfolioInvestimentos.Domain.Commands
             StatusCode = HttpStatusCode.OK;
         }
 
-        public CommandResult(HttpStatusCode statusCode, object data, string error)
+        public CommandResult(HttpStatusCode statusCode, object? data, string error)
         {
+            StatusCode = statusCode;
             Data = data;
             this.Errors.Add(error);
         }
 
-        public CommandResult(HttpStatusCode statusCode, object data, List<string> errors)
+        public CommandResult(HttpStatusCode statusCode, object? data, List<string> errors)
         {
+            StatusCode = statusCode;
             Data = data;
             Errors = errors;
         }
 
-        public CommandResult(HttpStatusCode statusCode, object data)
+        public CommandResult(HttpStatusCode statusCode, object? data)
         {
+            StatusCode = statusCode;
             Data = data;
         }
 

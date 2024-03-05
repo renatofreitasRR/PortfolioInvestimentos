@@ -1,12 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PortfolioInvestimentos.Domain.Commands;
-using PortfolioInvestimentos.Domain.Commands.Contracts;
 using PortfolioInvestimentos.Domain.Commands.Users;
 using PortfolioInvestimentos.Domain.Entities;
-using PortfolioInvestimentos.Domain.Enums;
 using PortfolioInvestimentos.Domain.Handlers;
 using PortfolioInvestimentos.Domain.Services;
 using PortfolioInvestimentos.Domain.Api.Controllers.Contracts;
@@ -16,7 +12,6 @@ using System.Net;
 namespace PortfolioInvestimentos.Domain.Api.Controllers
 {
     [Route("api/[controller]/[action]")]
-    //[Authorize]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -32,7 +27,8 @@ namespace PortfolioInvestimentos.Domain.Api.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Manager")]
+        [AllowAnonymous]
+        //[Authorize(Roles = "Manager")]
         public async Task<IActionResult> GetAllAsync()
         {
             var users = await _userRepository.GetAllAsync();
@@ -41,25 +37,12 @@ namespace PortfolioInvestimentos.Domain.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             var user = await _userRepository
                 .GetWithParamsAsync(x => x.Id == id);
 
             return new CustomActionResult(HttpStatusCode.OK, user);
-        }
-
-        [HttpDelete("{id}")]
-        [Authorize(Roles = "Manager")]
-        public async Task<IActionResult> DeleteAsync(int id)
-        {
-
-            var user = await _userRepository.GetWithParamsAsync(x => x.Id == id);
-            _userRepository.Delete(user);
-            await _userRepository.SaveAsync();
-            
-            return new CustomActionResult(HttpStatusCode.OK);
         }
 
         [HttpPost]

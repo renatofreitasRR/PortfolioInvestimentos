@@ -4,12 +4,7 @@ using PortfolioInvestimentos.Domain.Commands.Products;
 using PortfolioInvestimentos.Domain.Entities;
 using PortfolioInvestimentos.Domain.Handlers.Contracts;
 using PortfolioInvestimentos.Domain.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PortfolioInvestimentos.Domain.Handlers
 {
@@ -43,7 +38,7 @@ namespace PortfolioInvestimentos.Domain.Handlers
             var product = await _productRepository.GetWithParamsAsync(x => x.Id == command.Id);
 
             if (product is null)
-                return new CommandResult(HttpStatusCode.NotFound, $"Produto não encontrado!");
+                return new CommandResult(HttpStatusCode.NotFound, null, $"Produto não encontrado!");
 
             var existsWithSameName = await _productRepository
                 .ExistsAsync(x => x.Name.ToUpper() == command.Name.ToUpper() && x.Id != command.Id);

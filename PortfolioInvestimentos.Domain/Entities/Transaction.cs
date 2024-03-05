@@ -1,14 +1,18 @@
 ﻿using PortfolioInvestimentos.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PortfolioInvestimentos.Domain.Entities
 {
     public class Transaction : BaseEntity
     {
+        public Transaction(int accountId, int productId, int quantity, OperationType operationType, decimal value)
+        {
+            AccountId = accountId;
+            ProductId = productId;
+            Quantity = quantity;
+            OperationType = operationType;
+            Value = value;
+        }
+
         protected Transaction() { }
 
         public int AccountId { get; private set; }

@@ -22,6 +22,8 @@ namespace PortfolioInvestimentos.Domain.Api.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
+        //[Authorize(Roles = "Client, Manager")]
         public async Task<IActionResult> GetAllAsync()
         {
             var users = await _productRepository.GetAllAsync();
@@ -30,6 +32,7 @@ namespace PortfolioInvestimentos.Domain.Api.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Client, Manager")]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             var user = await _productRepository

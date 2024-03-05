@@ -8,7 +8,10 @@ using System.Net;
 
 namespace PortfolioInvestimentos.Domain.Handlers
 {
-    public class AccountHandler : IHandler<CreateAccountCommand>
+    public class AccountHandler : 
+        IHandler<CreateAccountCommand>,
+        IHandler<DepositAccountCommand>,
+        IHandler<WithdrawAccountCommand>
     {
         private readonly IUserRepository _userRepository;
         private readonly IAccountRepository _accountRepository;
@@ -39,6 +42,44 @@ namespace PortfolioInvestimentos.Domain.Handlers
             await _accountRepository.SaveAsync();
 
             return new CommandResult();
+        }
+
+        public async Task<ICommandResult> Handle(DepositAccountCommand command)
+        {
+            var account = await _accountRepository
+                .GetWithParamsAsync(x => x.Id == command.Id);
+
+            if (account is null)
+                return new CommandResult(HttpStatusCode.NotFound, null, $"A conta de id {command.Id} não foi encontrada");
+
+            var (isValid, message) = account.Deposit(command.Value);
+
+            if(isValid is false)
+                return new CommandResult(HttpStatusCode.BadRequest, null, message ?? "");
+
+            _accountRepository.Update(account);
+            await _accountRepository.SaveAsync();
+
+            return new CommandResult(HttpStatusCode.OK, null);
+        }
+
+        public async Task<ICommandResult> Handle(WithdrawAccountCommand command)
+        {
+            var account = await _accountRepository
+                .GetWithParamsAsync(x => x.Id == command.Id);
+
+            if (account is null)
+                return new CommandResult(HttpStatusCode.NotFound, null, $"A conta de id {command.Id} não foi encontrada");
+
+            var (isValid, message) = account.Withdraw(command.Value);
+
+            if (isValid is false)
+                return new CommandResult(HttpStatusCode.BadRequest, null, message ?? "");
+
+            _accountRepository.Update(account);
+            await _accountRepository.SaveAsync();
+
+            return new CommandResult(HttpStatusCode.OK, null);
         }
     }
 }

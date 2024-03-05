@@ -10,7 +10,7 @@ using PortfolioInvestimentos.Domain.Commands.Accounts;
 
 namespace PortfolioInvestimentos.Domain.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [Authorize]
     [ApiController]
     public class AccountController : ControllerBase
@@ -24,6 +24,7 @@ namespace PortfolioInvestimentos.Domain.Api.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Manager")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllAsync()
         {
             var users = await _accountRepository.GetAllAsync();
@@ -32,6 +33,7 @@ namespace PortfolioInvestimentos.Domain.Api.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Client, Manager")]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             var user = await _accountRepository
@@ -41,8 +43,26 @@ namespace PortfolioInvestimentos.Domain.Api.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Client")]
+        [Authorize(Roles = "Client, Manager")]
         public async Task<IActionResult> PostAsync([FromServices] AccountHandler handler, [FromBody] CreateAccountCommand command)
+        {
+            CommandResult commandResult = (CommandResult)await handler.Handle(command);
+
+            return new CustomActionResult(commandResult.StatusCode, commandResult.Data, commandResult.Errors);
+        }
+
+        [HttpPut]
+        [Authorize(Roles = "Client, Manager")]
+        public async Task<IActionResult> DepositAsync([FromServices] AccountHandler handler, [FromBody] DepositAccountCommand command)
+        {
+            CommandResult commandResult = (CommandResult)await handler.Handle(command);
+
+            return new CustomActionResult(commandResult.StatusCode, commandResult.Data, commandResult.Errors);
+        }
+
+        [HttpPut]
+        [Authorize(Roles = "Client, Manager")]
+        public async Task<IActionResult> WithdrawAsync([FromServices] AccountHandler handler, [FromBody] WithdrawAccountCommand command)
         {
             CommandResult commandResult = (CommandResult)await handler.Handle(command);
 

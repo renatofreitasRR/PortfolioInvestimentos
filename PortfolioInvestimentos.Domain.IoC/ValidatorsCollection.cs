@@ -12,10 +12,13 @@ namespace PortfolioInvestimentos.Domain.IoC
         public static IServiceCollection AddValidatorsCollection(this IServiceCollection services)
         {
             services.AddValidatorsFromAssemblyContaining<CreateAccountCommandValidator>();
+            services.AddValidatorsFromAssemblyContaining<DepositAccountCommandValidator>();
+            services.AddValidatorsFromAssemblyContaining<WithdrawAccountCommandValidator>();
             
             services.AddValidatorsFromAssemblyContaining<CreateUserCommandValidator>();
 
-            services.AddValidatorsFromAssemblyContaining<CreateTransactionCommandValidator>();
+            services.AddValidatorsFromAssemblyContaining<SellTransactionCommandValidator>();
+            services.AddValidatorsFromAssemblyContaining<BuyTransactionCommandValidator>();
 
             services.AddValidatorsFromAssemblyContaining<CreateProductCommandValidator>();
             services.AddValidatorsFromAssemblyContaining<UpdateProductCommandValidator>();
