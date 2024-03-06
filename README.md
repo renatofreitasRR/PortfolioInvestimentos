@@ -33,6 +33,18 @@ Selecione o Docker Compose como Projeto de Inicialização
 
 Inicie o servidor
 
+Substitua os valores para envio do email no arquivo appsettings.json:
+
+```bash
+   "EmailSettings": {
+        "Email": "youremail",
+        "DisplayName": "PortfolioInvestimentos",
+        "Password": "yourpassword",
+        "Host": "your.host.smtp",
+        "Port": 587
+    },
+```
+
 
 
 
@@ -403,3 +415,11 @@ Acesso: Manager, Client
 | `AccountId`      | `int` | **Obrigatório**. Id da conta|
 | `ProductId`      | `int` | **Obrigatório**. Id do produto |
 | `Quantity`      | `int` | **Obrigatório**. Quantidade de produtos na transação |
+
+
+
+
+
+
+
+
