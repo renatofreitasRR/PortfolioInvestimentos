@@ -35,6 +35,7 @@ builder.Services.AddSwaggerConfiguration();
 builder.Services.AddCookiesConfiguration();
 builder.Services.AddDatabaseConfiguration(configuration);
 builder.Services.AddQuartzConfiguration();
+builder.Services.AddAutoMapperConfiguration();
 
 
 builder.Services.AddRepositoriesCollection();

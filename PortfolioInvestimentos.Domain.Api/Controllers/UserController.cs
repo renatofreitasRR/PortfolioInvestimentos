@@ -8,6 +8,8 @@ using PortfolioInvestimentos.Domain.Services;
 using PortfolioInvestimentos.Domain.Api.Controllers.Contracts;
 using PortfolioInvestimentos.Domain.Repositories;
 using System.Net;
+using AutoMapper;
+using PortfolioInvestimentos.Domain.Models.Users;
 
 namespace PortfolioInvestimentos.Domain.Api.Controllers
 {
@@ -18,12 +20,14 @@ namespace PortfolioInvestimentos.Domain.Api.Controllers
         private readonly IUserPasswordService _userPasswordService;
         private readonly IUserRepository _userRepository;
         private readonly IJwtTokenService _tokenService;
+        private readonly IMapper _mapper;
 
-        public UserController(IUserPasswordService userPasswordService, IUserRepository userRepository, IJwtTokenService tokenService)
+        public UserController(IUserPasswordService userPasswordService, IUserRepository userRepository, IJwtTokenService tokenService, IMapper mapper)
         {
             _userPasswordService = userPasswordService;
             _userRepository = userRepository;
             _tokenService = tokenService;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -32,7 +36,9 @@ namespace PortfolioInvestimentos.Domain.Api.Controllers
         {
             var users = await _userRepository.GetAllAsync();
 
-            return new CustomActionResult(HttpStatusCode.OK, users);
+            var usersMapping = _mapper.Map<IEnumerable<UserResult>>(users);
+
+            return new CustomActionResult(HttpStatusCode.OK, usersMapping);
         }
 
         [HttpGet("{id}")]
@@ -45,7 +51,9 @@ namespace PortfolioInvestimentos.Domain.Api.Controllers
             if (user == null)
                 return new CustomActionResult(HttpStatusCode.NotFound, $"O usuário com {id} não foi encontrado", isData: false);
 
-            return new CustomActionResult(HttpStatusCode.OK, user);
+            var userMapping = _mapper.Map<UserResult>(user);
+
+            return new CustomActionResult(HttpStatusCode.OK, userMapping);
         }
 
         [HttpPost]
