@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PortfolioInvestimentos.Domain.Entities;
+using PortfolioInvestimentos.Domain.Enums;
 using PortfolioInvestimentos.Domain.Infra.Context;
+using PortfolioInvestimentos.Domain.Models;
 using PortfolioInvestimentos.Domain.Repositories;
 
 namespace PortfolioInvestimentos.Domain.Infra.Repositories
@@ -23,6 +25,19 @@ namespace PortfolioInvestimentos.Domain.Infra.Repositories
                 .ToListAsync();
 
             return products;
+        }
+
+        public PagedList<Product> GetProductsPaged(PaginationParams paginationParams)
+        {
+            var products = _context
+              .Products
+              .AsNoTracking()
+              .OrderBy(x => x.Name);
+
+            var pagedProducts = PagedList<Product>
+                .ToPagedList(products, paginationParams.PageNumber, paginationParams.PageSize);
+
+            return pagedProducts;
         }
     }
 }

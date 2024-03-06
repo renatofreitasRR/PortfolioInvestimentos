@@ -1,4 +1,4 @@
-﻿using PortfolioInvestimentos.Application.Services.Email;
+﻿using PortfolioInvestimentos.Application.Jobs.Email;
 using Quartz;
 
 namespace PortfolioInvestimentos.Domain.Api.Configurations

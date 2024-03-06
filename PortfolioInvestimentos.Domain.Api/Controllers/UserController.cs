@@ -27,8 +27,7 @@ namespace PortfolioInvestimentos.Domain.Api.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
-        //[Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> GetAllAsync()
         {
             var users = await _userRepository.GetAllAsync();
@@ -37,10 +36,14 @@ namespace PortfolioInvestimentos.Domain.Api.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Manager, Client")]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             var user = await _userRepository
                 .GetWithParamsAsync(x => x.Id == id);
+
+            if (user == null)
+                return new CustomActionResult(HttpStatusCode.NotFound, $"O usuário com {id} não foi encontrado", isData: false);
 
             return new CustomActionResult(HttpStatusCode.OK, user);
         }
@@ -52,17 +55,6 @@ namespace PortfolioInvestimentos.Domain.Api.Controllers
             CommandResult commandResult = (CommandResult)await handler.Handle(command);
 
             return new CustomActionResult(commandResult.StatusCode, commandResult.Data, commandResult.Errors);
-        }
-
-        [HttpDelete("{id}")]
-        [AllowAnonymous]
-        public async Task<IActionResult> DeleteAsync(int id)
-        {
-            var user = await _userRepository.GetWithParamsAsync(x => x.Id == id);
-             _userRepository.Delete(user);
-            await _userRepository.SaveAsync();
-
-            return new CustomActionResult(HttpStatusCode.OK);
         }
 
         [HttpPost]

@@ -3,6 +3,7 @@ namespace PortfolioInvestimentos.Domain.Models
 {
     public class PagedList<T> : List<T> where T : class
     {
+        public PagedList() { }
         public PagedList(List<T> items, int count, int pageNumber, int pageSize)
         {
             CurrentPage = pageNumber;

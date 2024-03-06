@@ -6,7 +6,7 @@ using Quartz;
 using System;
 using System.Text;
 
-namespace PortfolioInvestimentos.Application.Services.Email
+namespace PortfolioInvestimentos.Application.Jobs.Email
 {
     public class DailyDueDateProductsEmailJob : IJob
     {
@@ -60,7 +60,6 @@ namespace PortfolioInvestimentos.Application.Services.Email
 
             var products = await _productRepository
             .GetNearDueDateProductsAsync();
-
 
             if(products.Any())
             {

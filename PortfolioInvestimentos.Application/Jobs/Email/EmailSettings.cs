@@ -1,4 +1,4 @@
-﻿namespace PortfolioInvestimentos.Domain.Api.Models
+﻿namespace PortfolioInvestimentos.Application
 {
     public class EmailSettings
     {

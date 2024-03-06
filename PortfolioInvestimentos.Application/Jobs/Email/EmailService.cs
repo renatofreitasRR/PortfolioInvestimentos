@@ -9,16 +9,22 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PortfolioInvestimentos.Application.Services.Email
+namespace PortfolioInvestimentos.Application.Jobs.Email
 {
     public class EmailSenderService : IEmailSenderService
     {
+        private readonly EmailSettings _emailSettings;
+        public EmailSenderService(EmailSettings emailSettings)
+        {
+            _emailSettings = emailSettings;
+        }
+
         public async Task SendEmailAsync(string email, string subject, string message)
         {
-            var mail = "renato.freitas@uni9.edu.br";
-            var pw = "jUtCwIfE359BHdFp";
+            var mail = _emailSettings.Mail;
+            var pw = _emailSettings.Password;
 
-            var client = new SmtpClient("smtp-relay.brevo.com", 587)
+            var client = new SmtpClient(_emailSettings.Host, _emailSettings.Port)
             {
                 EnableSsl = true,
                 Credentials = new NetworkCredential(mail, pw)

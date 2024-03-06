@@ -24,7 +24,6 @@ namespace PortfolioInvestimentos.Domain.Api.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Manager")]
-        [AllowAnonymous]
         public async Task<IActionResult> GetAllAsync()
         {
             var accounts = await _accountRepository.GetAllAsync();
@@ -38,6 +37,9 @@ namespace PortfolioInvestimentos.Domain.Api.Controllers
         {
             var account = await _accountRepository
                 .GetWithParamsAsync(x => x.Id == id);
+            
+            if(account == null)
+                return new CustomActionResult(HttpStatusCode.NotFound, $"A conta com id {id} não foi encontrada", isData: false);
 
             return new CustomActionResult(HttpStatusCode.OK, account);
         }

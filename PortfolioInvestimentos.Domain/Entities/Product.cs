@@ -1,5 +1,6 @@
 ﻿using PortfolioInvestimentos.Domain.Entities.Contracts;
 using PortfolioInvestimentos.Domain.Enums;
+using System.Linq.Expressions;
 
 namespace PortfolioInvestimentos.Domain.Entities
 {

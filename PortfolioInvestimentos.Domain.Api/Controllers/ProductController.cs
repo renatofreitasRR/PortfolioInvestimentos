@@ -6,6 +6,9 @@ using PortfolioInvestimentos.Domain.Api.Controllers.Contracts;
 using System.Net;
 using PortfolioInvestimentos.Domain.Repositories;
 using PortfolioInvestimentos.Domain.Commands.Products;
+using PortfolioInvestimentos.Domain.Models;
+using PortfolioInvestimentos.Application.Caching.Contracts;
+using PortfolioInvestimentos.Domain.Entities;
 
 namespace PortfolioInvestimentos.Domain.Api.Controllers
 {
@@ -15,18 +18,27 @@ namespace PortfolioInvestimentos.Domain.Api.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductRepository _productRepository;
+        private readonly ICachingService _cachingService;
 
-        public ProductController(IProductRepository productRepository)
+        public ProductController(IProductRepository productRepository, ICachingService cachingService)
         {
             _productRepository = productRepository;
+            _cachingService = cachingService;
         }
 
         [HttpGet]
-        [AllowAnonymous]
-        //[Authorize(Roles = "Client, Manager")]
-        public async Task<IActionResult> GetAllAsync()
+        [Authorize(Roles = "Client, Manager")]
+        public async Task<IActionResult> GetAllPagedAsync([FromQuery] PaginationParams paginationParams)
         {
-            var products = await _productRepository.GetAllAsync();
+            var productsCached = await _cachingService.GetAsync<PagedList<Product>>($"products-{paginationParams.PageSize}-{paginationParams.PageNumber}");
+
+            if (productsCached != null)
+                return new CustomActionResult(HttpStatusCode.OK, productsCached);
+
+            var products = _productRepository
+                .GetProductsPaged(paginationParams);
+
+            await _cachingService.SetAsync<PagedList<Product?>>($"products-{paginationParams.PageSize}-{paginationParams.PageNumber}", products);
 
             return new CustomActionResult(HttpStatusCode.OK, products);
         }
@@ -37,6 +49,9 @@ namespace PortfolioInvestimentos.Domain.Api.Controllers
         {
             var product = await _productRepository
                 .GetWithParamsAsync(x => x.Id == id);
+
+            if (product == null)
+                return new CustomActionResult(HttpStatusCode.NotFound, $"O Produto com {id} não foi encontrado", isData: false);
 
             return new CustomActionResult(HttpStatusCode.OK, product);
         }
