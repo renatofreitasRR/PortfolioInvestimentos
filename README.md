@@ -6,9 +6,17 @@ Sistema para gestão de portfólio de investimentos
 
 ## Stack utilizada
 
-**Back-end:** .NET 8, Redis, Docker
+**Back-end:** .NET 8, Redis, Quartz, Docker
 
 **Banco de dados:** SQL Server
+
+
+## Uso de Tecnologias
+
+- Redis para gerenciamento de caching distribuido
+- Quartz para Eventos agendados
+- FluentValidation para validação dos métodos de POST e PUT
+
 
 
 ## Rodando localmente
@@ -27,6 +35,44 @@ Inicie o servidor
 
 
 
+
+## Fluxo de funcionamento
+
+- 1º Passo - Criação do Usuário (Manager/Client) 
+
+```http
+  POST /api/User/Post
+```
+
+- 2º Passo - Autenticação
+
+```http
+  POST /api/User/SignIn
+```
+
+- 3º Passo - Criar uma Conta
+
+```http
+  POST /api/Account/Post
+```
+
+- 4º Passo - Realizar um depósito
+
+```http
+  POST /api/Account/Deposit
+```
+
+- 5º Passo - Realizar transação de Compra
+
+```http
+   POST /api/Transaction/BuyTransaction
+```
+
+- 6º Passo - Retirar Extrato de Transações
+
+```http
+   GET /api/Transaction/GetExtractPaginated/${userId}
+```
 
 ## Documentação dos Enumerados
 
@@ -100,12 +146,14 @@ Inicie o servidor
 ### Users
 
 #### Retorna todos os usuários
+Acesso: Manager
 
 ```http
   GET /api/user/GetAll
 ```
 
 #### Retorna um usuário
+Acesso: Manager, Client
 
 ```http
   GET /api/User/GetById/${id}
@@ -116,6 +164,7 @@ Inicie o servidor
 | `id`      | `int` | **Obrigatório**. O ID do usuário |
 
 #### Criar um usuário
+Acesso: Sem Restrições
 
 ```http
   POST /api/User/Post
@@ -124,14 +173,14 @@ Inicie o servidor
 | Parâmetro   | Tipo       | Descrição                                   |
 | :---------- | :--------- | :------------------------------------------ |
 | `Name`      | `string` | **Obrigatório**. Nome do usuário|
-| `Profile`      | `UserInvestorProfile` | **Opcional**. Perfil de investidor do usuário |
+| `Profile`      | `UserInvestorProfile` | Perfil de investidor do usuário |
 | `Role`      | `UserRole` | **Obrigatório**. Acessos do usuário |
 | `Email`      | `string` | **Obrigatório**. Email do usuário |
 | `Password`      | `string` | **Obrigatório**.  Senha do usuário|
 | `ConfirmPassword`      | `string` | **Obrigatório**. Confirmação de senha do usuário |
 
 #### Login
-
+Acesso: Sem Restrições
 ```http
   POST /api/User/SignIn
 ```
@@ -145,12 +194,21 @@ Inicie o servidor
 ### Products
 
 #### Retorna todos os produtos
+Acesso: Manager, Client
 
 ```http
-  GET /api/Product/GetAll
+  GET /api/Product/GetAllPaged
 ```
 
+| Parâmetro   | Tipo       | Descrição                                   |
+| :---------- | :--------- | :------------------------------------------ |
+| `PageNumber`      | `int` |  Número da página |
+| `PageSize`      | `int` |  Quantidade de elementos a serem retornados |
+
+
+
 #### Retorna um produto
+Acesso: Manager, Client
 
 ```http
   GET /api/Product/GetById/${id}
@@ -161,7 +219,7 @@ Inicie o servidor
 | `id`      | `string` | **Obrigatório**. O ID do produto |
 
 #### Criar um Produto
-
+Acesso: Manager
 ```http
   POST /api/Product/Post
 ```
@@ -175,6 +233,7 @@ Inicie o servidor
 | `DueDate`      | `DateTimme` | **Obrigatório**.  Data de Vencimento|
 
 #### Editar um Produto
+Acesso: Manager
 
 ```http
   PUT /api/Product/Put
@@ -194,14 +253,14 @@ Inicie o servidor
 ### Accounts
 
 #### Retorna todas as contas
-
+Acesso: Manager
 ```http
   GET /api/Account/GetAll
 ```
 
 
 #### Retorna uma conta
-
+Acesso: Manager, Client
 ```http
   GET /api/Account/GetById/${id}
 ```
@@ -211,7 +270,7 @@ Inicie o servidor
 | `id`      | `string` | **Obrigatório**. O ID da conta |
 
 #### Criar uma conta
-
+Acesso: Manager, Client
 ```http
   POST /api/Account/Post
 ```
@@ -222,7 +281,7 @@ Inicie o servidor
 | `Value`      | `decimal` | **Obrigatório**. Valor inicial da conta|
 
 #### Depositar valor na conta
-
+Acesso: Manager, Client
 ```http
   PUT /api/Account/Deposit
 ```
@@ -233,7 +292,7 @@ Inicie o servidor
 | `Value`      | `decimal` | **Obrigatório**. Valor a depositar na conta|
 
 #### Retirar valor da conta
-
+Acesso: Manager, Client
 ```http
   PUT /api/Account/Withdraw
 ```
@@ -247,26 +306,37 @@ Inicie o servidor
 ### Transactions
 
 #### Retorna todos as transações
-
-
+Acesso: Manager
 ```http
   GET /api/Transaction/GetAll
 ```
 
 #### Retorna uma transação
-
+Acesso: Manager, Client
 ```http
   GET /api/Transaction/GetById/${id}
 ```
 
 | Parâmetro   | Tipo       | Descrição                                   |
 | :---------- | :--------- | :------------------------------------------ |
-| `id`      | `string` | **Obrigatório**. O ID da transação |
+| `Id`      | `string` | **Obrigatório**. O ID da transação |
 
-#### Criar uma transação
-
+#### Retorna histórico de transação por usuário
+Acesso: Manager, Client
 ```http
-  POST /api/Transaction/Post
+  GET /api/Transaction/GetExtractPaginated/${userId}
+```
+
+| Parâmetro   | Tipo       | Descrição                                   |
+| :---------- | :--------- | :------------------------------------------ |
+| `Id`      | `string` | **Obrigatório**. Id do usuário |
+| `PageNumber`      | `int` |  Número da página |
+| `PageSize`      | `int` |  Quantidade de elementos a serem retornados |
+
+#### Criar uma transação de compra
+Acesso: Manager, Client
+```http
+  POST /api/Transaction/BuyTransaction
 ```
 
 | Parâmetro   | Tipo       | Descrição                                   |
@@ -274,17 +344,15 @@ Inicie o servidor
 | `AccountId`      | `int` | **Obrigatório**. Id da conta|
 | `ProductId`      | `int` | **Obrigatório**. Id do produto |
 | `Quantity`      | `int` | **Obrigatório**. Quantidade de produtos na transação |
-| `OperationType`      | `OperationType` | **Obrigatório**. Tipo da operação |
-| `Value`      | `Decimal` | **Obrigatório**.  Valor total da transação|
 
+#### Criar uma transação de venda
+Acesso: Manager, Client
+```http
+  POST /api/Transaction/SellTransaction
+```
 
-
-
-
-## Funcionalidades
-
-- Temas dark e light
-- Preview em tempo real
-- Modo tela cheia
-- Multiplataforma
-
+| Parâmetro   | Tipo       | Descrição                                   |
+| :---------- | :--------- | :------------------------------------------ |
+| `AccountId`      | `int` | **Obrigatório**. Id da conta|
+| `ProductId`      | `int` | **Obrigatório**. Id do produto |
+| `Quantity`      | `int` | **Obrigatório**. Quantidade de produtos na transação |
