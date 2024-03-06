@@ -73,6 +73,53 @@ Inicie o servidor
 ```http
    GET /api/Transaction/GetExtractPaginated/${userId}
 ```
+## Documentação Entidades
+
+### User
+
+| Parâmetro   | Tipo       | Descrição                                   |
+| :---------- | :--------- | :------------------------------------------ |
+| `Id`      | `int` |Id do Usuário|
+| `Name`      | `string` |Nome do usuário|
+| `Profile`      | `UserInvestorProfile` | Perfil de investidor do usuário |
+| `Role`      | `UserRole` |Acessos do usuário |
+| `Email`      | `string` |Email do usuário |
+| `PasswordHash`      | `string` |Senha do usuário em Hash|
+| `CreatedAt`      | `DateTime` |Data da Criação do Registro|
+
+### Product
+
+| Parâmetro   | Tipo       | Descrição                                   |
+| :---------- | :--------- | :------------------------------------------ |
+| `Id`      | `int` |Id do Produto|
+| `Name`      | `string` |Nome do produto|
+| `Type`      | `ProductType` |Tipo do produto |
+| `Value`      | `decimal` |Valor do produto |
+| `QuantityAvailable`      | `int` |Quantidade disponível |
+| `DueDate`      | `DateTimme` | Data de Vencimento|
+| `CreatedAt`      | `DateTime` |Data da Criação do Registro|
+
+### Account
+
+| Parâmetro   | Tipo       | Descrição                                   |
+| :---------- | :--------- | :------------------------------------------ |
+| `Id`      | `int` |Id da Conta|
+| `UserId`      | `int` |Id do Usuário|
+| `Value`      | `decimal` |Valor inicial da conta|
+| `Transactions`      | `IEnumerable<Transaction>` |Transações|
+| `CreatedAt`      | `DateTime` |Data da Criação do Registro|
+
+### Transaction
+
+| Parâmetro   | Tipo       | Descrição                                   |
+| :---------- | :--------- | :------------------------------------------ |
+| `Id`      | `int` |Id da Transação|
+| `AccountId`      | `int` |Id da Conta|
+| `ProductId`      | `string` |Id do Produto|
+| `Quantity`      | `int` | Quantidade de Produtos Comprados ou Vendidos |
+| `OperationType`      | `OperationType` | Compra ou Venda |
+| `Value`      | `decimal` |Valor da Transação |
+| `CreatedAt`      | `DateTime` |Data da Criação do Registro|
 
 ## Documentação dos Enumerados
 
