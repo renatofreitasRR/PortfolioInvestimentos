@@ -58,7 +58,9 @@ Substitua os valores para envio do email no arquivo appsettings.json:
 ```
 
 - 2º Passo - Autenticação
- Ao receber o token deve-se autenticar no Swagger no topo superior direito da página.
+
+ - Ao receber o token deve-se autenticar no Swagger no topo superior direito da página.
+ - o valor a ser inserido deve estar no formato "Bearer seutoken"
 
 ```http
   POST /api/User/SignIn
