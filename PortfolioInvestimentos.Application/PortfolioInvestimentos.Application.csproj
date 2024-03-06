@@ -7,15 +7,27 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Services\Email\Templates\**" />
+    <EmbeddedResource Remove="Services\Email\Templates\**" />
+    <None Remove="Services\Email\Templates\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentValidation" Version="11.9.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.2" />
+    <PackageReference Include="Quartz" Version="3.8.1" />
+    <PackageReference Include="Quartz.Extensions.Hosting" Version="3.8.1" />
     <PackageReference Include="SharpGrip.FluentValidation.AutoValidation.Mvc" Version="1.4.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.4.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\PortfolioInvestimentos.Domain\PortfolioInvestimentos.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
 
 </Project>

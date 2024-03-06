@@ -1,13 +1,15 @@
-﻿using PortfolioInvestimentos.Domain.Services;
+﻿using Microsoft.AspNetCore.Hosting.Server;
+using PortfolioInvestimentos.Domain.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PortfolioInvestimentos.Application.Services
+namespace PortfolioInvestimentos.Application.Services.Email
 {
     public class EmailSenderService : IEmailSenderService
     {
@@ -22,9 +24,11 @@ namespace PortfolioInvestimentos.Application.Services
                 Credentials = new NetworkCredential(mail, pw)
             };
 
+            var mailMessage = new MailMessage(from: mail, to: email, subject, message);
+
             await client
                 .SendMailAsync(
-                    new MailMessage(from: mail, to: email, subject, message)
+                   mailMessage
                 );
         }
     }

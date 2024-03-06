@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using PortfolioInvestimentos.Application.Authentication;
-using PortfolioInvestimentos.Application.Services;
+using PortfolioInvestimentos.Application.Services.Email;
 using PortfolioInvestimentos.Domain.Entities;
 using PortfolioInvestimentos.Domain.Services;
 

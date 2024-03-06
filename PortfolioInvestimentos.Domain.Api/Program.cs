@@ -30,6 +30,8 @@ builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Emai
 builder.Services.AddSwaggerConfiguration();
 builder.Services.AddCookiesConfiguration();
 builder.Services.AddDatabaseConfiguration(configuration);
+builder.Services.AddQuartzConfiguration();
+
 
 builder.Services.AddRepositoriesCollection();
 builder.Services.AddServicesCollection();

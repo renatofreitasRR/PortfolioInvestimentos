@@ -16,6 +16,7 @@ namespace PortfolioInvestimentos.Domain.IoC
             services.AddValidatorsFromAssemblyContaining<WithdrawAccountCommandValidator>();
             
             services.AddValidatorsFromAssemblyContaining<CreateUserCommandValidator>();
+            services.AddValidatorsFromAssemblyContaining<UserLoginCommandValidator>();
 
             services.AddValidatorsFromAssemblyContaining<SellTransactionCommandValidator>();
             services.AddValidatorsFromAssemblyContaining<BuyTransactionCommandValidator>();

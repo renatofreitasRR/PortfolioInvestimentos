@@ -54,6 +54,17 @@ namespace PortfolioInvestimentos.Domain.Api.Controllers
             return new CustomActionResult(commandResult.StatusCode, commandResult.Data, commandResult.Errors);
         }
 
+        [HttpDelete("{id}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> DeleteAsync(int id)
+        {
+            var user = await _userRepository.GetWithParamsAsync(x => x.Id == id);
+             _userRepository.Delete(user);
+            await _userRepository.SaveAsync();
+
+            return new CustomActionResult(HttpStatusCode.OK);
+        }
+
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> SignInAsync([FromBody] UserLoginCommand command)
