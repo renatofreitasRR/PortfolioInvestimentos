@@ -16,6 +16,7 @@ Sistema para gestão de portfólio de investimentos
 - Redis para gerenciamento de caching distribuido
 - Quartz para Eventos agendados
 - FluentValidation para validação dos métodos de POST e PUT
+- Documentação dos End-Points com Swagger
 
 
 
@@ -57,6 +58,7 @@ Substitua os valores para envio do email no arquivo appsettings.json:
 ```
 
 - 2º Passo - Autenticação
+ Ao receber o token deve-se autenticar no Swagger no topo superior direito da página.
 
 ```http
   POST /api/User/SignIn
@@ -415,11 +417,4 @@ Acesso: Manager, Client
 | `AccountId`      | `int` | **Obrigatório**. Id da conta|
 | `ProductId`      | `int` | **Obrigatório**. Id do produto |
 | `Quantity`      | `int` | **Obrigatório**. Quantidade de produtos na transação |
-
-
-
-
-
-
-
 
