@@ -22,3 +22,8 @@ services:
       DbUser: "SA"
       Password: "numsey#2021"
       Database: "Portfolio"
+  portfolioinvestimentos.cache:
+    image: redis:latest
+    restart: always
+    ports:
+        - '6379:6379'

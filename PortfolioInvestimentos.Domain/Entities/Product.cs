@@ -13,6 +13,7 @@ namespace PortfolioInvestimentos.Domain.Entities
             DueDate = dueDate;
             QuantityAvailable = quantity;
             IsActive = true;
+            CreatedAt = DateTime.UtcNow;
         }
 
         protected Product()

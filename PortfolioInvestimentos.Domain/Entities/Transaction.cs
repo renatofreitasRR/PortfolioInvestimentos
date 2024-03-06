@@ -11,6 +11,7 @@ namespace PortfolioInvestimentos.Domain.Entities
             Quantity = quantity;
             OperationType = operationType;
             Value = value;
+            CreatedAt = DateTime.UtcNow;
         }
 
         protected Transaction() { }

@@ -33,5 +33,29 @@ namespace PortfolioInvestimentos.Domain.Infra.Repositories
 
             return transaction;
         }
+
+        public async Task<PagedList<InvestmentStatement>> GetExtractTransactions(PaginationParams paginationParams, int userId)
+        {
+            var transaction = _context
+                .Transactions
+                .Include(x => x.Account)
+                .Include(x => x.Product)
+                .Where(x => x.Account.UserId == userId)
+                .AsNoTracking()
+                .Select(x => new InvestmentStatement
+                {
+                    ProductName = x.Product.Name,
+                    OperationType = x.OperationType,
+                    Date = x.CreatedAt,
+                    Quantity = x.Quantity,
+                    Value = x.Product.CalculateTotalTransactionValue(x.Quantity)
+                })
+                .OrderBy(x => x.ProductName);
+
+            var pagedInvestiments = PagedList<InvestmentStatement>
+                .ToPagedList(transaction, paginationParams.PageNumber, paginationParams.PageSize);
+
+            return pagedInvestiments;
+        }
     }
 }

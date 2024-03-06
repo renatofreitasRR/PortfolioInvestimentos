@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.IdentityModel.Tokens;
+using PortfolioInvestimentos.Application.Authentication.Models;
 using PortfolioInvestimentos.Domain.Entities;
 using PortfolioInvestimentos.Domain.Services;
 using System.IdentityModel.Tokens.Jwt;
@@ -14,7 +15,7 @@ namespace PortfolioInvestimentos.Application.Authentication
         {
             var tokenHandler = new JwtSecurityTokenHandler();
 
-            var tokenKey = Encoding.ASCII.GetBytes("599930f7ba74b85bba6c2b33cdabc2c090160e712ba1c346a290991fe5317d03");
+            var tokenKey = Encoding.ASCII.GetBytes(SecretKeySettings.Secret);
 
             var claims = new List<Claim>()
             {

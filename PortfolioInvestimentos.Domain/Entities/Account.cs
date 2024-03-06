@@ -12,6 +12,7 @@ namespace PortfolioInvestimentos.Domain.Entities
         {
             UserId = userId;
             Value = value;
+            CreatedAt = DateTime.UtcNow;
         }
 
         protected Account() { }

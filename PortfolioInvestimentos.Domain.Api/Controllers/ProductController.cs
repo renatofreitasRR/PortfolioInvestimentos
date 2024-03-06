@@ -26,19 +26,19 @@ namespace PortfolioInvestimentos.Domain.Api.Controllers
         //[Authorize(Roles = "Client, Manager")]
         public async Task<IActionResult> GetAllAsync()
         {
-            var users = await _productRepository.GetAllAsync();
+            var products = await _productRepository.GetAllAsync();
 
-            return new CustomActionResult(HttpStatusCode.OK, users);
+            return new CustomActionResult(HttpStatusCode.OK, products);
         }
 
         [HttpGet("{id}")]
         [Authorize(Roles = "Client, Manager")]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
-            var user = await _productRepository
+            var product = await _productRepository
                 .GetWithParamsAsync(x => x.Id == id);
 
-            return new CustomActionResult(HttpStatusCode.OK, user);
+            return new CustomActionResult(HttpStatusCode.OK, product);
         }
 
         [HttpPost]

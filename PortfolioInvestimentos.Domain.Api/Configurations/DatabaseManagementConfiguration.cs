@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PortfolioInvestimentos.Domain.Infra.Context;
 
-namespace PortfolioInvestimentos.Domain.Api.Services
+namespace PortfolioInvestimentos.Domain.Api.Configurations
 {
-    public static class DatabaseManagementService
+    public static class DatabaseManagementConfiguration
     {
         public static void MigrationInitialisation(this IApplicationBuilder app)
         {
