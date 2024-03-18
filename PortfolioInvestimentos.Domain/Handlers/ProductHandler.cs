@@ -8,7 +8,9 @@ using System.Net;
 
 namespace PortfolioInvestimentos.Domain.Handlers
 {
-    public class ProductHandler : IHandler<CreateProductCommand>
+    public class ProductHandler : 
+        IHandler<CreateProductCommand>, 
+        IHandler<UpdateProductCommand>
     {
         private readonly IProductRepository _productRepository;
 
